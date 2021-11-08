@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open-uri'
 
 class GamesController < ApplicationController
@@ -12,13 +14,13 @@ class GamesController < ApplicationController
     # raise
     dictionary = JSON.parse(URI.open("https://wagon-dictionary.herokuapp.com/#{@word}").read)
 
-    if dictionary["found"] && letter_check(@word, @letters)
-      @result = "#{@word.upcase} is a valid English word!"
-    elsif dictionary["found"] && letter_check(@word, @letters) == false
-      @result = "Sorry but #{@word.upcase} can't be built out of #{@letters}"
-    else
-      @result = "Sorry but #{@word.upcase} doesn't seem to be a valid English word."
-    end
+    @result = if dictionary['found'] && letter_check(@word, @letters)
+                "#{@word.upcase} is a valid English word!"
+              elsif dictionary['found'] && letter_check(@word, @letters) == false
+                "Sorry but #{@word.upcase} can't be built out of #{@letters}"
+              else
+                "Sorry but #{@word.upcase} doesn't seem to be a valid English word."
+              end
   end
 
   def letter_check(attempt, grid)
